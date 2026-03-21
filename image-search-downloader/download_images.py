@@ -9,6 +9,8 @@ ap.add_argument('-u', '--urls', required=True, help='path to image urls file')
 ap.add_argument('-s', '--start', default=1, help='start number of image name')
 args = vars(ap.parse_args())
 
+base_name = os.path.splitext(os.path.basename(args['urls']))[0]
+
 urls = open(args['urls']).read().strip().split('\n')
 start_index = args['start']
 image_names = []
@@ -16,7 +18,7 @@ i = 0
 
 while i < len(urls):
     try:
-        image_name = f'image {start_index}.jpg'
+        image_name = f'{base_name}_{start_index}.jpg'
         print('[GET] Downloading', image_name, '-', urls[i])
         result = requests.get(urls[i], timeout=60)
 

@@ -16,3 +16,6 @@ optional arguments:
   -o OUT, --out OUT         path to images directory
   -u URLS, --urls URLS      path to image urls file
   -s START, --start START   start number of image name
+
+
+python .\download_images.py -o .\images\Google\Phở\ - u .\images\pho.txt        

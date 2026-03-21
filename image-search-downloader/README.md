@@ -99,3 +99,9 @@ optional arguments:
 
 -   https://www.pyimagesearch.com/2018/04/09/how-to-quickly-build-a-deep-learning-image-dataset/
 -   https://www.pyimagesearch.com/2017/12/04/how-to-create-a-deep-learning-dataset-using-google-images/
+
+
+## Bản quyền thuộc tác giả: Quan Dang
+- Repo gốc: https://github.com/18520339/image-search-downloader.git
+- Chỉnh sửa:
+  - Update lại service download ảnh bằng google
