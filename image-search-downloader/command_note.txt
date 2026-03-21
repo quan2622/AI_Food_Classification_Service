@@ -18,4 +18,9 @@ optional arguments:
   -s START, --start START   start number of image name
 
 
+// Command download images from urls text file
 python .\download_images.py -o .\images\Google\Phở\ - u .\images\pho.txt        
+
+
+// Command automation find/download images from food_list.xlsx
+python .\auto_get_download_google_urls.py
