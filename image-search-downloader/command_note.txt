@@ -1,0 +1,18 @@
+python -m venv venv
+
+[chạy khi mà chạy lệnh activate không được]
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+venv\Scripts\activate
+
+[Cài thư viện]
+pip install matplotlib requests pillow
+
+[Download ảnh về máy]
+usage: download_images.py [-h] -o OUT -u URLS [-s START]
+
+optional arguments:
+  -h, --help                show this help message and exit
+  -o OUT, --out OUT         path to images directory
+  -u URLS, --urls URLS      path to image urls file
+  -s START, --start START   start number of image name
