@@ -1,0 +1,14 @@
+python -m venv .venv
+
+python -m venv .venv
+
+pip install --upgrade pip
+python -m pip install --upgrade pip
+
+pip install -r requirements.txt
+
+[Command sort images]
+python .\sort_similar.py -s .\example_urls.txt -w "Sheet1" -r "B2:C" -a .\credentials.json
+
+[Download images from sheet]
+python .\download_images.py -s "sheet_images" -w "Sheet1" -r "B2:C" -a credentials.json -o .\images\bun_bo_hue\

@@ -3,6 +3,9 @@ python -m venv venv
 [chạy khi mà chạy lệnh activate không được]
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
+[chạy bằng ps]
+venv\Scripts\Activate.ps1
+
 venv\Scripts\activate
 
 [Cài thư viện]
