@@ -1,0 +1,13 @@
+# Start/End env
+- .\.venv\Scripts\activate
+- deactivate
+
+# Dowload library
+pip install -r requirements.txt
+
+# Chạy mô hình
+python src/train.py
+
+python src/evaluate.py
+
+python src/predict.py
