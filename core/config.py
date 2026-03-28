@@ -1,26 +1,52 @@
-# config.py
+from pathlib import Path
+
 import torch
 
+CORE_DIR = Path(__file__).resolve().parent
+DATA_DIR = CORE_DIR / 'dataset'
+MODEL_SAVE_DIR = CORE_DIR / 'models'
+RESULTS_DIR = CORE_DIR / 'results'
+PRETRAINED_DIR = CORE_DIR / 'pretrained'
+
+
+def resolve_split_dir(*candidates):
+    if not DATA_DIR.exists():
+        return None
+
+    subdirs = {item.name.lower(): item for item in DATA_DIR.iterdir() if item.is_dir()}
+    for candidate in candidates:
+        match = subdirs.get(candidate.lower())
+        if match:
+            return match
+    return None
+
+
+def discover_class_names():
+    train_dir = resolve_split_dir('train')
+    if not train_dir:
+        return []
+    return sorted(item.name for item in train_dir.iterdir() if item.is_dir())
+
+
 # Dataset
-DATA_DIR    = 'dataset'
-NUM_CLASSES = 10
-CLASS_NAMES = [
-    'pho', 'bun_bo_hue', 'com_tam', 'banh_mi', 'bun_rieu',
-    'banh_xeo', 'goi_cuon', 'hu_tieu', 'mi_quang', 'cao_lau'
-]
+CLASS_NAMES = discover_class_names()
+NUM_CLASSES = len(CLASS_NAMES)
 
 # Training
-BATCH_SIZE  = 32
-NUM_EPOCHS  = 30
-DEVICE      = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+BATCH_SIZE = 32
+NUM_EPOCHS = 30
+DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+DEFAULT_MODEL_NAME = 'efficientnet_b3'
 
 # Models cần train và kích thước ảnh tương ứng
 MODELS_CONFIG = {
     'efficientnet_b3': {'img_size': 300, 'lr': 0.001},
-    'resnet50':        {'img_size': 224, 'lr': 0.001},
-    'inceptionv3':     {'img_size': 299, 'lr': 0.0005},
+    'resnet50': {'img_size': 224, 'lr': 0.001},
+    'inceptionv3': {'img_size': 299, 'lr': 0.0005},
 }
 
-# Paths
-MODEL_SAVE_DIR  = 'models'
-RESULTS_DIR     = 'results'
+PRETRAINED_WEIGHTS = {
+    'efficientnet_b3': PRETRAINED_DIR / 'efficientnet_b3_rwightman-b3899882.pth',
+    'resnet50': PRETRAINED_DIR / 'resnet50-0676ba61.pth',
+    'inceptionv3': PRETRAINED_DIR / 'inception_v3_google-0cc3c7bd.pth',
+}

@@ -1,11 +1,23 @@
 # src/evaluate.py
-import torch, os, sys
+import argparse
+import os
+import sys
+
+import torch
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import classification_report, confusion_matrix
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-from config import DEVICE, NUM_CLASSES, CLASS_NAMES, MODELS_CONFIG, MODEL_SAVE_DIR, RESULTS_DIR
+from config import (
+    CLASS_NAMES,
+    DEFAULT_MODEL_NAME,
+    DEVICE,
+    MODEL_SAVE_DIR,
+    MODELS_CONFIG,
+    NUM_CLASSES,
+    RESULTS_DIR,
+)
 from src.dataset import get_dataloaders
 from src.models import get_model
 
@@ -14,10 +26,8 @@ def evaluate_model(model_name):
     _, _, test_dl = get_dataloaders(cfg['img_size'])
 
     model = get_model(model_name, NUM_CLASSES).to(DEVICE)
-    model.load_state_dict(
-        torch.load(f'{MODEL_SAVE_DIR}/best_{model_name}.pth',
-                   map_location=DEVICE)
-    )
+    model_path = MODEL_SAVE_DIR / f'best_{model_name}.pth'
+    model.load_state_dict(torch.load(model_path, map_location=DEVICE))
     model.eval()
 
     all_preds, all_labels = [], []
@@ -43,9 +53,24 @@ def evaluate_model(model_name):
     plt.xticks(rotation=45, ha='right')
     plt.tight_layout()
     os.makedirs(RESULTS_DIR, exist_ok=True)
-    plt.savefig(f'{RESULTS_DIR}/cm_{model_name}.png', dpi=150)
+    plt.savefig(RESULTS_DIR / f'cm_{model_name}.png', dpi=150)
     plt.show()
 
 if __name__ == '__main__':
-    for model_name in MODELS_CONFIG:
+    parser = argparse.ArgumentParser(description='Danh gia model tren test set.')
+    parser.add_argument(
+        '--model',
+        default=DEFAULT_MODEL_NAME,
+        choices=MODELS_CONFIG.keys(),
+        help='Model can danh gia.',
+    )
+    parser.add_argument(
+        '--all',
+        action='store_true',
+        help='Danh gia toan bo model da train.',
+    )
+    args = parser.parse_args()
+
+    models_to_eval = MODELS_CONFIG.keys() if args.all else [args.model]
+    for model_name in models_to_eval:
         evaluate_model(model_name)

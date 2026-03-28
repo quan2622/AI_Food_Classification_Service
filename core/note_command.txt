@@ -5,9 +5,22 @@
 # Dowload library
 pip install -r requirements.txt
 
-# Chạy mô hình
-python src/train.py
+# Dat pretrained weights vao:
+# core/pretrained/efficientnet_b3_rwightman-b3899882.pth
+# core/pretrained/resnet50-0676ba61.pth
+# core/pretrained/inception_v3_google-0cc3c7bd.pth
 
-python src/evaluate.py
+# Chạy train 1 model de test nhanh
+python src/train.py --model efficientnet_b3
 
-python src/predict.py
+# Chạy train tat ca model
+python src/train.py --all
+
+# Danh gia model
+python src/evaluate.py --model efficientnet_b3
+
+# Predict 1 anh
+python src/predict.py path_to_image.jpg --model efficientnet_b3
+
+# Chay API de upload anh test
+uvicorn src.api:app --reload
