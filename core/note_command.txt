@@ -5,6 +5,9 @@
 # Dowload library
 pip install -r requirements.txt
 
+# Tao file .env cho database
+# DATABASE_URL="postgresql+psycopg://postgres:123456@192.168.30.128:5432/ai_food_db?schema=public"
+
 # Dat pretrained weights vao:
 # core/pretrained/efficientnet_b3_rwightman-b3899882.pth
 # core/pretrained/resnet50-0676ba61.pth
@@ -24,3 +27,12 @@ python src/predict.py path_to_image.jpg --model efficientnet_b3
 
 # Chay API de upload anh test
 uvicorn src.api:app --reload
+
+# Feedback cho anh da predict de dua vao reviewed dataset
+# POST /feedback voi body:
+# {
+#   "image_id": "...",
+#   "confirmed_label": "Pho",
+#   "is_correct": true,
+#   "notes": "nguoi dung xac nhan nhan dien dung"
+# }

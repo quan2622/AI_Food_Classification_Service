@@ -1,12 +1,23 @@
 from pathlib import Path
+import os
 
 import torch
+from dotenv import load_dotenv
 
 CORE_DIR = Path(__file__).resolve().parent
+load_dotenv(CORE_DIR / '.env')
+
 DATA_DIR = CORE_DIR / 'dataset'
 MODEL_SAVE_DIR = CORE_DIR / 'models'
 RESULTS_DIR = CORE_DIR / 'results'
 PRETRAINED_DIR = CORE_DIR / 'pretrained'
+RUNTIME_DATA_DIR = CORE_DIR / 'data_runtime'
+UPLOADS_DIR = RUNTIME_DATA_DIR / 'uploads'
+REVIEWED_DIR = RUNTIME_DATA_DIR / 'reviewed'
+DATABASE_URL = os.getenv(
+    'DATABASE_URL',
+    'postgresql+psycopg://postgres:123456@192.168.30.128:5432/ai_food_db?schema=public',
+)
 
 
 def resolve_split_dir(*candidates):
