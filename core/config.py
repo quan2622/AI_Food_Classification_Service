@@ -44,9 +44,10 @@ CLASS_NAMES = discover_class_names()
 NUM_CLASSES = len(CLASS_NAMES)
 
 # Training
-BATCH_SIZE = 32
+_cuda = torch.cuda.is_available()
+DEVICE = torch.device('cuda' if _cuda else 'cpu')
+BATCH_SIZE = 32 if _cuda else 8   # giảm khi train CPU để tránh OOM
 NUM_EPOCHS = 30
-DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 DEFAULT_MODEL_NAME = 'efficientnet_b3'
 
 # Models cần train và kích thước ảnh tương ứng

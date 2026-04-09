@@ -52,9 +52,11 @@ def get_dataloaders(img_size, return_info=False):
     val_ds = datasets.ImageFolder(str(val_dir), transform=val_tf)
     test_ds = datasets.ImageFolder(str(test_dir), transform=val_tf)
 
-    train_dl = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True,  num_workers=2)
-    val_dl   = DataLoader(val_ds,   batch_size=BATCH_SIZE, shuffle=False, num_workers=2)
-    test_dl  = DataLoader(test_ds,  batch_size=BATCH_SIZE, shuffle=False, num_workers=2)
+    import torch
+    _workers = 2 if torch.cuda.is_available() else 0  # 0 workers trên CPU tránh fork OOM
+    train_dl = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True,  num_workers=_workers)
+    val_dl   = DataLoader(val_ds,   batch_size=BATCH_SIZE, shuffle=False, num_workers=_workers)
+    test_dl  = DataLoader(test_ds,  batch_size=BATCH_SIZE, shuffle=False, num_workers=_workers)
 
     print(f"Train: {len(train_ds)} | Val: {len(val_ds)} | Test: {len(test_ds)}")
     if not return_info:
