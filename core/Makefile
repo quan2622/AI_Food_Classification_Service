@@ -1,4 +1,4 @@
-.PHONY: help setup install train train-all evaluate predict api api-prod split-dataset clean
+.PHONY: help setup install train train-all train-quick train-resnet evaluate predict api api-prod split-dataset clean
 
 PYTHON := python3
 VENV := .venv
@@ -6,7 +6,9 @@ VENV_BIN := $(VENV)/bin
 PIP := $(VENV_BIN)/pip
 PYTHON_VENV := $(VENV_BIN)/python
 
-# Server config (override khi cần: make api HOST=0.0.0.0 PORT=8001)
+# Epochs override: make train EPOCHS=5
+EPOCHS ?= 30
+MODEL  ?= efficientnet_b3
 HOST ?= 0.0.0.0
 PORT ?= 8000
 
@@ -22,8 +24,11 @@ help:
 	@echo "  make api-prod   - Chạy FastAPI (production, không reload)"
 	@echo ""
 	@echo "Training:"
-	@echo "  make train      - Train model efficientnet_b3"
-	@echo "  make train-all  - Train tất cả models"
+	@echo "  make train              - Train efficientnet_b3 (30 epoch)"
+	@echo "  make train EPOCHS=5     - Train với số epoch tuỳ chọn"
+	@echo "  make train-quick        - Train resnet50 5 epoch (test nhanh CPU)"
+	@echo "  make train-resnet       - Train resnet50 đầy đủ (nhẹ hơn CPU)"
+	@echo "  make train-all          - Train tất cả models"
 	@echo ""
 	@echo "Evaluation & Inference:"
 	@echo "  make evaluate   - Đánh giá model efficientnet_b3"
@@ -52,7 +57,13 @@ install:
 	$(PIP) install -r requirements.txt
 
 train:
-	$(PYTHON_VENV) src/train.py --model efficientnet_b3
+	$(PYTHON_VENV) src/train.py --model $(MODEL) --epochs $(EPOCHS)
+
+train-quick:
+	$(PYTHON_VENV) src/train.py --model resnet50 --epochs 5
+
+train-resnet:
+	$(PYTHON_VENV) src/train.py --model resnet50 --epochs $(EPOCHS)
 
 train-all:
 	$(PYTHON_VENV) src/train.py --all

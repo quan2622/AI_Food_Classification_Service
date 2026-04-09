@@ -208,8 +208,18 @@ if __name__ == '__main__':
         action='store_true',
         help='Train toan bo model trong MODELS_CONFIG.',
     )
+    parser.add_argument(
+        '--epochs',
+        type=int,
+        default=None,
+        help='Override so epoch (mac dinh lay tu config.py).',
+    )
     args = parser.parse_args()
 
-    models_to_train = MODELS_CONFIG.keys() if args.all else [args.model]
+    if args.epochs is not None:
+        import config as _cfg
+        _cfg.NUM_EPOCHS = args.epochs
+
+    models_to_train = list(MODELS_CONFIG.keys()) if args.all else [args.model]
     for model_name in models_to_train:
         train_one_model(model_name)
