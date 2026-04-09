@@ -8,14 +8,18 @@ from config import BATCH_SIZE, resolve_split_dir
 
 def get_transforms(img_size):
     train_tf = transforms.Compose([
-        transforms.Resize((img_size + 20, img_size + 20)),
+        transforms.Resize((img_size + 32, img_size + 32)),
         transforms.RandomCrop(img_size),
         transforms.RandomHorizontalFlip(),
-        transforms.RandomRotation(15),
-        transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.3),
+        transforms.RandomVerticalFlip(p=0.1),
+        transforms.RandomRotation(20),
+        transforms.ColorJitter(brightness=0.4, contrast=0.4, saturation=0.4, hue=0.1),
+        transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 2.0)),
+        transforms.RandomGrayscale(p=0.05),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406],
-                             [0.229, 0.224, 0.225])
+                             [0.229, 0.224, 0.225]),
+        transforms.RandomErasing(p=0.3, scale=(0.02, 0.2), ratio=(0.3, 3.3)),
     ])
     val_tf = transforms.Compose([
         transforms.Resize((img_size, img_size)),

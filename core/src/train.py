@@ -81,15 +81,17 @@ def train_one_model(model_name):
     criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
     optimizer = optim.AdamW(
         filter(lambda p: p.requires_grad, model.parameters()),
-        lr=lr, weight_decay=1e-4
+        lr=lr, weight_decay=1e-3
     )
     scheduler = optim.lr_scheduler.CosineAnnealingLR(
         optimizer, T_max=NUM_EPOCHS, eta_min=1e-6
     )
 
+    EARLY_STOP_PATIENCE = 7
     history  = {'train_loss':[], 'val_loss':[], 'train_acc':[], 'val_acc':[], 'lr':[], 'epoch_time_sec':[]}
     best_acc = 0.0
     best_epoch = 0
+    no_improve_count = 0
     start    = time.time()
 
     for epoch in range(NUM_EPOCHS):
@@ -140,9 +142,12 @@ def train_one_model(model_name):
         if v_acc > best_acc:
             best_acc = v_acc
             best_epoch = epoch + 1
+            no_improve_count = 0
             os.makedirs(MODEL_SAVE_DIR, exist_ok=True)
             torch.save(model.state_dict(),
                        f'{MODEL_SAVE_DIR}/best_{model_name}.pth')
+        else:
+            no_improve_count += 1
 
         print(
             f"[{model_name}] Epoch {epoch+1:02d}/{NUM_EPOCHS} "
@@ -152,7 +157,12 @@ def train_one_model(model_name):
             f"| val_acc={v_acc:.2f}% "
             f"| lr={current_lr:.6f} "
             f"| time={epoch_time/60:.2f}m"
+            f"| no_improve={no_improve_count}/{EARLY_STOP_PATIENCE}"
               + (" ★" if v_acc == best_acc else ""))
+
+        if no_improve_count >= EARLY_STOP_PATIENCE:
+            print(f"\n[Early Stopping] Val accuracy không cải thiện sau {EARLY_STOP_PATIENCE} epoch. Dừng sớm.")
+            break
 
     elapsed = (time.time() - start) / 60
     training_config = {

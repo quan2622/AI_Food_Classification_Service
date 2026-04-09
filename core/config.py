@@ -51,9 +51,9 @@ DEFAULT_MODEL_NAME = 'efficientnet_b3'
 
 # Models cần train và kích thước ảnh tương ứng
 MODELS_CONFIG = {
-    'efficientnet_b3': {'img_size': 300, 'lr': 0.001},
-    'resnet50': {'img_size': 224, 'lr': 0.001},
-    'inceptionv3': {'img_size': 299, 'lr': 0.0005},
+    'efficientnet_b3': {'img_size': 300, 'lr': 0.0002},
+    'resnet50': {'img_size': 224, 'lr': 0.0002},
+    'inceptionv3': {'img_size': 299, 'lr': 0.0001},
 }
 
 PRETRAINED_WEIGHTS = {

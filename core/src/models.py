@@ -36,9 +36,8 @@ def get_model(name, num_classes):
                 p.requires_grad = False
         in_f = m.classifier[1].in_features
         m.classifier = nn.Sequential(
-            nn.Dropout(0.4), nn.Linear(in_f, 512),
-            nn.ReLU(),       nn.Dropout(0.3),
-            nn.Linear(512, num_classes)
+            nn.Dropout(0.4),
+            nn.Linear(in_f, num_classes)
         )
 
     elif name == 'resnet50':
